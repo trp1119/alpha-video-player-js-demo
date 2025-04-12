@@ -2,7 +2,6 @@
 
 ## 示例
 
-https://test-web.bxyuer.com/alpha-video-player-js-demo
 
 ## SDK
 
