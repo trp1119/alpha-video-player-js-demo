@@ -14,6 +14,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'docs',
+    outDir: 'docs', // 设置打包输出目录为 docs
   },
+  base: '/alpha-video-player-js-demo/', // 设置资源路径的基础路径
 })
