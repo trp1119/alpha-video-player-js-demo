@@ -11,16 +11,30 @@
         <div class="content">
           <div
             :class="['container', `container-${item.orientation}-${item.side}`]"
-            ref="containerRef"
             :style="{
               width: `${item.width}px`,
               height: `${item.height}px`
             }"
-          ></div>
+          >
+            <AlphaVideoPlayer
+              :key="playerKey"
+              ref="playerRef"
+              :src="videoSrc"
+              :width="item.width"
+              :height="item.height"
+              :muted="muted"
+              :loop="loop"
+              :playback-rate="playbackRate"
+              :orientation="item.orientation"
+              :side="item.side"
+              @initSuccess="isInit = true"
+              @destroy="isInit = false"
+            />
+          </div>
         </div>
         <div class="controller">
           <div class="controller-item">
-            <button :disabled="isInit"  @click="initPlayer">初始化</button>
+            <button :disabled="isInit" @click="initPlayer">初始化</button>
           </div>
           <div class="controller-item">
             <button :disabled="!isInit" @click="play">播放</button>
@@ -41,7 +55,7 @@
           </div>
           <div class="controller-item">
             倍速 ×{{ playbackRate }} <br />
-            <input :disabled="!isInit" v-model="playbackRate" type="range" step="0.5" min="0.5" max="2">
+            <input :disabled="!isInit" v-model.number="playbackRate" type="range" step="0.5" min="0.5" max="2">
           </div>
           <div class="controller-item" v-if="item.otherSrc">
             <button :disabled="!isInit" @click="setSrc">换一个</button>
@@ -54,92 +68,60 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, watch, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
 import type { IItem } from '../type'
-import AlphaVideoPlayerJs from 'alpha-video-player-js'
+import AlphaVideoPlayer from 'alpha-video-player-js/vue3'
+
+/** 与 alpha-video-player-js/vue3 的 expose 对齐（TS 无法从 defineComponent 推断 expose） */
+type AlphaVideoPlayerExpose = {
+  play: () => void
+  pause: () => void
+  destroy: () => void
+}
 
 const props = defineProps<{
   item: IItem
 }>()
 
-const containerRef = ref<HTMLElement>()
 const videoRef = ref<HTMLVideoElement>()
+const playerRef = ref<AlphaVideoPlayerExpose | null>(null)
 const muted = ref(true)
 const loop = ref(false)
 const playbackRate = ref(1)
 const isInit = ref(false)
 const videoSrc = ref(props.item.src)
-
-let player: AlphaVideoPlayerJs
+const playerKey = ref(0)
 
 const initPlayer = () => {
-  if (!containerRef.value) return
-  const item = props.item
-
-  player = new AlphaVideoPlayerJs({
-    container: containerRef.value,
-    src: item.src,
-    muted: muted.value,
-    loop: loop.value,
-    playbackRate: playbackRate.value,
-    orientation: item.orientation,
-    side: item.side,
-    onInitSuccess: () => {
-      isInit.value = true
-    },
-    onDestroy: () => {
-      isInit.value = false
-    },
-  })
+  playerKey.value += 1
 }
 
 const play = () => {
-  videoRef.value && videoRef.value.play()
-  player.play()
+  videoRef.value?.play()
+  playerRef.value?.play()
 }
 
 const pause = () => {
-  videoRef.value && videoRef.value.pause()
-  player.pause()
+  videoRef.value?.pause()
+  playerRef.value?.pause()
 }
 
 const destroy = () => {
-  videoRef.value && videoRef.value.pause()
-  videoRef.value && (videoRef.value.currentTime = 0)
-
-  player.destroy()
+  videoRef.value?.pause()
+  if (videoRef.value) videoRef.value.currentTime = 0
+  playerRef.value?.destroy()
 }
 
 const setSrc = () => {
-  const item = props.item
+  const { item } = props
   videoSrc.value = (videoSrc.value === item.src ? item.otherSrc : item.src) as string
-  player.setSrc(videoSrc.value)
-
   muted.value = true
   loop.value = false
   playbackRate.value = 1
 }
 
-const item = computed(() => props.item)
-
-watch(muted, (newVal) => {
-  player.setMute(newVal)
-})
-
-watch(loop, (newVal) => {
-  player.setLoop(newVal)
-})
-
-watch(playbackRate, (newVal) => {
-  player.setPlaybackRate(newVal)
-})
-
-onMounted(() => {
-  initPlayer()
-})
-
 onBeforeUnmount(() => {
-  player && player.destroy()
+  playerRef.value?.destroy()
 })
 </script>
 
