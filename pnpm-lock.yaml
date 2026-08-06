@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       alpha-video-player-js:
-        specifier: ^1.1.0
-        version: 1.1.0(vue@3.5.32(typescript@5.8.3))
+        specifier: link:../alpha-video-player-js
+        version: link:../alpha-video-player-js
       vue:
         specifier: ^3.5.13
         version: 3.5.32(typescript@5.8.3)
