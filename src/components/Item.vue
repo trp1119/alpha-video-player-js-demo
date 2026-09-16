@@ -17,7 +17,7 @@
             :src="videoSrc"
             :muted="true"
             :loop="loop"
-            :playback-rate="playbackRate"
+            :playbackRate="playbackRate"
             playsinline
           />
         </div>
