@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       alpha-video-player-js:
-        specifier: link:../alpha-video-player-js
-        version: link:../alpha-video-player-js
+        specifier: ^1.3.1
+        version: 1.4.2(vue@3.5.32(typescript@5.8.3))
       vue:
         specifier: ^3.5.13
         version: 3.5.32(typescript@5.8.3)
@@ -623,8 +623,8 @@ packages:
   alien-signals@1.0.13:
     resolution: {integrity: sha512-OGj9yyTnJEttvzhTUWuscOvtqxq5vrhF7vL9oS0xJ2mK0ItPYP1/y+vCFebfxoEyAz0++1AIwJ5CMr+Fk3nDmg==}
 
-  alpha-video-player-js@1.1.0:
-    resolution: {integrity: sha512-VVaTn9hSKK5ZE8pOrjTBD1KZw9rkyOzew4P91U4MV9gLflADZB8tNN0crwDZCZEVPrCKKdCrqHZB+LfJPFIMTw==}
+  alpha-video-player-js@1.4.2:
+    resolution: {integrity: sha512-J/SrTxiWvSX1JYqfYXrP+UZWXd4CBmxoMJbDHzLf4WFsdz2l5PzcAMc48X+jP1uslK78ZGXIQlgm865JpMEYkg==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -1664,7 +1664,7 @@ snapshots:
 
   alien-signals@1.0.13: {}
 
-  alpha-video-player-js@1.1.0(vue@3.5.32(typescript@5.8.3)):
+  alpha-video-player-js@1.4.2(vue@3.5.32(typescript@5.8.3)):
     optionalDependencies:
       vue: 3.5.32(typescript@5.8.3)
 
